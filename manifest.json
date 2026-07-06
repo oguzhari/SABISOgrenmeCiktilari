@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "SABIS Cikti Doldurucu",
+  "description": "SABIS sinav sayfasinda program ve ogrenme ciktilarini toplu secmeye yardimci olur.",
+  "version": "0.2.0",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://abs.sakarya.edu.tr/Ders/Detay/*",
+        "file:///*"
+      ],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "host_permissions": [
+    "https://abs.sakarya.edu.tr/*"
+  ]
+}
