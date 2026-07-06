@@ -86,16 +86,42 @@
   margin-top: 4px;
 }
 
-#sabis-outcome-filler .sabis-section {
-  margin-top: 12px;
-  padding-top: 10px;
-  border-top: 1px solid #e4e9f2;
+#sabis-outcome-filler .sabis-mode {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #d8dfeb;
+  border-left: 4px solid #2468d8;
+  border-radius: 8px;
+  background: #ffffff;
 }
 
-#sabis-outcome-filler .sabis-section-title {
-  margin-bottom: 8px;
-  font-weight: 700;
+#sabis-outcome-filler .sabis-mode:first-child {
+  margin-top: 0;
+}
+
+#sabis-outcome-filler .sabis-mode-clear {
+  border-left-color: #a61b1b;
+  background: #fffafa;
+}
+
+#sabis-outcome-filler .sabis-mode-selected {
+  border-left-color: #176b3a;
+}
+
+#sabis-outcome-filler .sabis-mode-random {
+  border-left-color: #9a5b00;
+}
+
+#sabis-outcome-filler .sabis-mode-title {
+  margin-bottom: 3px;
   color: #172033;
+  font-weight: 700;
+}
+
+#sabis-outcome-filler .sabis-mode-note {
+  margin-bottom: 9px;
+  color: #5d6b82;
+  font-size: 12px;
 }
 
 #sabis-outcome-filler .sabis-field-title {
@@ -168,6 +194,16 @@
   border-color: #8ea0ba;
   background: #ffffff;
   color: #172033;
+}
+
+#sabis-outcome-filler button.sabis-action.danger {
+  border-color: #a61b1b;
+  background: #fff5f5;
+  color: #a61b1b;
+}
+
+#sabis-outcome-filler button.sabis-action.danger:hover {
+  background: #ffe8e8;
 }
 
 #sabis-outcome-filler button:disabled {

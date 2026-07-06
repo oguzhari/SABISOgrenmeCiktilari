@@ -54,11 +54,19 @@
       '  <button class="sabis-icon-button" type="button" data-action="toggle" title="Paneli küçült">_</button>',
       '</div>',
       '<div class="sabis-body">',
-      '  <div class="sabis-row">',
+      '  <div class="sabis-mode sabis-mode-all">',
+      '    <div class="sabis-mode-title">Bütün çıktıları doldur</div>',
+      '    <div class="sabis-mode-note">Listedeki tüm PÇ ve ÖÇ seçeneklerini tüm sorulara uygular.</div>',
       '    <button class="sabis-action" type="button" data-action="fill-all">Bütün çıktıları doldur</button>',
       '  </div>',
-      '  <div class="sabis-section">',
-      '    <div class="sabis-section-title">Seçilenlerle doldur</div>',
+      '  <div class="sabis-mode sabis-mode-clear">',
+      '    <div class="sabis-mode-title">Tüm çıktıları temizle</div>',
+      '    <div class="sabis-mode-note">Mevcut PÇ ve ÖÇ kayıtlarını siler. İşlemden önce onay sorar.</div>',
+      '    <button class="sabis-action danger" type="button" data-action="clear-all">Tüm çıktıları temizle</button>',
+      '  </div>',
+      '  <div class="sabis-mode sabis-mode-selected">',
+      '    <div class="sabis-mode-title">Seçilenlerle doldur</div>',
+      '    <div class="sabis-mode-note">Aşağıda işaretlediğiniz PÇ ve ÖÇ seçeneklerini tüm sorulara uygular.</div>',
       '    <div class="sabis-field-title">Program Çıktıları</div>',
       '    <div class="sabis-options" data-kind="program">',
       renderOptionCheckboxes("program", programOptions),
@@ -69,8 +77,9 @@
       '    </div>',
       '    <button class="sabis-action secondary" type="button" data-action="fill-selected">Seçilenleri tüm sorulara uygula</button>',
       '  </div>',
-      '  <div class="sabis-section">',
-      '    <div class="sabis-section-title">Rastgele doldur</div>',
+      '  <div class="sabis-mode sabis-mode-random">',
+      '    <div class="sabis-mode-title">Rastgele doldur</div>',
+      '    <div class="sabis-mode-note">Her soru için belirttiğiniz adet kadar rastgele PÇ ve ÖÇ atar.</div>',
       '    <div class="sabis-row">',
       '      <label>PÇ adedi<input id="sabis-random-program-count" type="number" min="0" max="' + programOptions.length + '" value="' + getDefaultRandomCount(programOptions.length) + '"></label>',
       '      <label>ÖÇ adedi<input id="sabis-random-learning-count" type="number" min="0" max="' + learningOptions.length + '" value="' + getDefaultRandomCount(learningOptions.length) + '"></label>',
@@ -104,6 +113,8 @@
       runFill("selected");
     } else if (action === "fill-random") {
       runFill("random");
+    } else if (action === "clear-all") {
+      runClearAll();
     }
   }
 
@@ -197,6 +208,98 @@
     }).filter(function (item) {
       return item.olcmeId && (item.programValues.length || item.learningValues.length);
     });
+  }
+
+  async function runClearAll() {
+    var confirmed = window.confirm("Tüm Program ve Öğrenme Çıktıları temizlenecek. Devam edilsin mi?");
+    if (!confirmed) {
+      updateStatus("Temizleme iptal edildi.", "warn");
+      return;
+    }
+
+    var panel = document.getElementById(PANEL_ID);
+    var buttons = Array.prototype.slice.call(panel.querySelectorAll("button"));
+    setButtonsDisabled(buttons, true);
+
+    try {
+      var rows = getRows();
+      if (!rows.length) {
+        updateStatus("Soru satırı bulunamadı.", "error");
+        return;
+      }
+
+      var plan = buildClearPlan(rows);
+      var totalRequests = countDeleteRequests(plan);
+      if (!totalRequests) {
+        updateStatus("Temizlenecek çıktı bulunamadı.", "warn");
+        return;
+      }
+
+      if (LOCAL_PREVIEW) {
+        applyClearPlanToDom(plan);
+        updateStatus("Yerel HTML önizlemesindeki çıktılar temizlendi. Canlı SABIS sayfasında silme kaydı da gönderilir.", "warn");
+        return;
+      }
+
+      var completed = 0;
+      for (var i = 0; i < plan.length; i += 1) {
+        var item = plan[i];
+
+        for (var p = 0; p < item.programIds.length; p += 1) {
+          await deleteOutcome("program", item.programIds[p]);
+          completed += 1;
+          updateStatus(completed + "/" + totalRequests + " çıktı temizlendi.");
+          await sleep(DEFAULT_DELAY_MS);
+        }
+
+        for (var o = 0; o < item.learningIds.length; o += 1) {
+          await deleteOutcome("learning", item.learningIds[o]);
+          completed += 1;
+          updateStatus(completed + "/" + totalRequests + " çıktı temizlendi.");
+          await sleep(DEFAULT_DELAY_MS);
+        }
+      }
+
+      applyClearPlanToDom(plan);
+      updateStatus("Temizleme tamamlandı. " + rows.length + " satır işlendi.", "ok");
+
+      var reload = document.getElementById("sabis-reload");
+      if (reload && reload.checked) {
+        window.setTimeout(function () {
+          window.location.reload();
+        }, 900);
+      }
+    } catch (error) {
+      updateStatus(error && error.message ? error.message : "Temizleme sırasında hata oluştu.", "error");
+    } finally {
+      setButtonsDisabled(buttons, false);
+    }
+  }
+
+  function buildClearPlan(rows) {
+    return rows.map(function (row) {
+      return {
+        row: row.element,
+        programSelect: row.programSelect,
+        learningSelect: row.learningSelect,
+        programIds: getBadgeIds(row.element, ".pCiktiSil[data-id]"),
+        learningIds: getBadgeIds(row.element, ".oCiktiSil[data-id]")
+      };
+    }).filter(function (item) {
+      return item.programIds.length || item.learningIds.length;
+    });
+  }
+
+  function getBadgeIds(row, selector) {
+    var ids = [];
+    Array.prototype.slice.call(row.querySelectorAll(selector)).forEach(function (badge) {
+      var id = badge.getAttribute("data-id");
+      if (id && ids.indexOf(id) === -1) {
+        ids.push(id);
+      }
+    });
+
+    return ids;
   }
 
   function getTargetValues(select, mode, selectedValues, randomCount) {
@@ -367,6 +470,35 @@
     });
   }
 
+  function applyClearPlanToDom(plan) {
+    plan.forEach(function (item) {
+      removeBadges(item.row, ".pCiktiSil[data-id]");
+      removeBadges(item.row, ".oCiktiSil[data-id]");
+      clearSelection(item.programSelect);
+      clearSelection(item.learningSelect);
+    });
+  }
+
+  function removeBadges(row, selector) {
+    Array.prototype.slice.call(row.querySelectorAll(selector)).forEach(function (badge) {
+      badge.remove();
+    });
+  }
+
+  function clearSelection(select) {
+    if (!select) {
+      return;
+    }
+
+    Array.prototype.slice.call(select.options).forEach(function (option) {
+      option.selected = false;
+      option.disabled = false;
+    });
+
+    select.dispatchEvent(new Event("change", { bubbles: true }));
+    updateMultiselectButton(select);
+  }
+
   function applySelectionToSelect(select, values) {
     if (!select || !values.length) {
       return;
@@ -424,9 +556,36 @@
     }
   }
 
+  async function deleteOutcome(type, id) {
+    var isProgram = type === "program";
+    var endpoint = isProgram ? "/Ders/Sinav/SilProgramCikti" : "/Ders/Sinav/SilOgrenmeCikti";
+    var body = new URLSearchParams();
+    body.append("ID", id);
+
+    var response = await fetch(endpoint, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: body.toString()
+    });
+
+    if (!response.ok) {
+      throw new Error("SABIS silme isteği başarısız oldu: HTTP " + response.status);
+    }
+  }
+
   function countRequests(plan) {
     return plan.reduce(function (count, item) {
       return count + (item.programValues.length ? 1 : 0) + (item.learningValues.length ? 1 : 0);
+    }, 0);
+  }
+
+  function countDeleteRequests(plan) {
+    return plan.reduce(function (count, item) {
+      return count + item.programIds.length + item.learningIds.length;
     }, 0);
   }
 

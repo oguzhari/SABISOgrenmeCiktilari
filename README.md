@@ -106,6 +106,12 @@ Kısaca: Klasörü yerinde tutarsanız ve Chrome'da eklenti açık kalırsa kull
 
 En kolay mod. Hiçbir seçim yapmadan basarsınız. Sayfadaki tüm Program Çıktılarını ve tüm Öğrenme Çıktılarını bütün sorulara uygular.
 
+### Tüm çıktıları temizle
+
+Sayfadaki mevcut Program Çıktısı ve Öğrenme Çıktısı kayıtlarını temizler.
+
+Bu işlem kayıt siler. Yanlışlıkla basılmasın diye önce tarayıcı onayı sorar. Eminseniz onay verirsiniz.
+
 ### Seçilenleri tüm sorulara uygula
 
 Panelde Program Çıktıları ve Öğrenme Çıktıları ayrı ayrı listelenir.
