@@ -1,0 +1,11 @@
+.DS_Store
+*.crx
+*.pem
+
+# Kaydedilmiş SABIS sayfa örnekleri ve tarayıcı asset klasörleri
+*.html
+*_files/
+
+# Geçici test çıktıları
+tmp/
+dist/

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="390" viewBox="0 0 980 390" role="img" aria-labelledby="title desc">
+  <title id="title">SABIS Çıktı Doldurucu kullanım özeti</title>
+  <desc id="desc">SABIS sınav detay sayfasında Program Öğrenme Çıktıları sekmesini aç, sağ alttaki panelden doldurma modunu seç.</desc>
+  <rect width="980" height="390" rx="18" fill="#f6f8fb"/>
+  <text x="40" y="54" fill="#172033" font-family="Arial, sans-serif" font-size="28" font-weight="700">Kullanım özeti</text>
+  <text x="40" y="84" fill="#4d5c73" font-family="Arial, sans-serif" font-size="16">SABIS sayfasında işlem tek panelden yapılır.</text>
+
+  <g transform="translate(40 115)">
+    <rect width="560" height="220" rx="12" fill="#ffffff" stroke="#cfd7e6"/>
+    <rect x="0" y="0" width="560" height="42" rx="12" fill="#e8eef8"/>
+    <text x="20" y="27" fill="#172033" font-family="Arial, sans-serif" font-size="16" font-weight="700">SABIS sınav sayfası</text>
+    <rect x="22" y="62" width="160" height="34" rx="6" fill="#ffffff" stroke="#8ea0ba"/>
+    <text x="42" y="84" fill="#4d5c73" font-family="Arial, sans-serif" font-size="13">Sınav İşlemleri</text>
+    <rect x="192" y="62" width="210" height="34" rx="6" fill="#2468d8"/>
+    <text x="212" y="84" fill="#fff" font-family="Arial, sans-serif" font-size="13" font-weight="700">Program/Öğrenme Çıktıları</text>
+    <rect x="22" y="120" width="516" height="72" rx="8" fill="#f9fbfe" stroke="#d8dfeb"/>
+    <text x="42" y="150" fill="#172033" font-family="Arial, sans-serif" font-size="14" font-weight="700">Soru satırları</text>
+    <text x="42" y="174" fill="#4d5c73" font-family="Arial, sans-serif" font-size="13">PÇ ve ÖÇ seçim alanları burada bulunur.</text>
+  </g>
+
+  <g transform="translate(650 95)">
+    <rect width="290" height="260" rx="12" fill="#ffffff" stroke="#cfd7e6"/>
+    <rect width="290" height="42" rx="12" fill="#f6f8fb"/>
+    <text x="18" y="27" fill="#172033" font-family="Arial, sans-serif" font-size="16" font-weight="700">SABIS Çıktı Doldurucu</text>
+    <rect x="18" y="62" width="254" height="36" rx="7" fill="#2468d8"/>
+    <text x="72" y="85" fill="#fff" font-family="Arial, sans-serif" font-size="14" font-weight="700">Bütün çıktıları doldur</text>
+    <rect x="18" y="118" width="254" height="52" rx="7" fill="#f9fbfe" stroke="#d8dfeb"/>
+    <text x="34" y="141" fill="#172033" font-family="Arial, sans-serif" font-size="13" font-weight="700">Seçilenlerle doldur</text>
+    <text x="34" y="160" fill="#4d5c73" font-family="Arial, sans-serif" font-size="12">PÇ ve ÖÇ listeden işaretlenir</text>
+    <rect x="18" y="188" width="254" height="52" rx="7" fill="#f9fbfe" stroke="#d8dfeb"/>
+    <text x="34" y="211" fill="#172033" font-family="Arial, sans-serif" font-size="13" font-weight="700">Rastgele doldur</text>
+    <text x="34" y="230" fill="#4d5c73" font-family="Arial, sans-serif" font-size="12">Her soru için adet girilir</text>
+  </g>
+
+  <path d="M585 220 H635" stroke="#8ea0ba" stroke-width="3" stroke-linecap="round"/>
+  <path d="M626 210 L640 220 L626 230" fill="none" stroke="#8ea0ba" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="392" y="365" fill="#4d5c73" font-family="Arial, sans-serif" font-size="15">Sekmeyi aç, sağ alttaki panelden modu seç, işlem bitsin.</text>
+</svg>

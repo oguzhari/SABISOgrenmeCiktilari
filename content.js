@@ -44,6 +44,8 @@
       existingPanel.remove();
     }
 
+    var programOptions = getSourceOptions(PROGRAM_SELECTOR);
+    var learningOptions = getSourceOptions(LEARNING_SELECTOR);
     var panel = document.createElement("section");
     panel.id = PANEL_ID;
     panel.innerHTML = [
@@ -53,7 +55,27 @@
       '</div>',
       '<div class="sabis-body">',
       '  <div class="sabis-row">',
-      '    <button class="sabis-action" type="button" data-action="select-all">Bütün çıktıları doldur</button>',
+      '    <button class="sabis-action" type="button" data-action="fill-all">Bütün çıktıları doldur</button>',
+      '  </div>',
+      '  <div class="sabis-section">',
+      '    <div class="sabis-section-title">Seçilenlerle doldur</div>',
+      '    <div class="sabis-field-title">Program Çıktıları</div>',
+      '    <div class="sabis-options" data-kind="program">',
+      renderOptionCheckboxes("program", programOptions),
+      '    </div>',
+      '    <div class="sabis-field-title">Öğrenme Çıktıları</div>',
+      '    <div class="sabis-options" data-kind="learning">',
+      renderOptionCheckboxes("learning", learningOptions),
+      '    </div>',
+      '    <button class="sabis-action secondary" type="button" data-action="fill-selected">Seçilenleri tüm sorulara uygula</button>',
+      '  </div>',
+      '  <div class="sabis-section">',
+      '    <div class="sabis-section-title">Rastgele doldur</div>',
+      '    <div class="sabis-row">',
+      '      <label>PÇ adedi<input id="sabis-random-program-count" type="number" min="0" max="' + programOptions.length + '" value="' + getDefaultRandomCount(programOptions.length) + '"></label>',
+      '      <label>ÖÇ adedi<input id="sabis-random-learning-count" type="number" min="0" max="' + learningOptions.length + '" value="' + getDefaultRandomCount(learningOptions.length) + '"></label>',
+      '    </div>',
+      '    <button class="sabis-action secondary" type="button" data-action="fill-random">Her soruya rastgele ata</button>',
       '  </div>',
       '  <label class="sabis-check"><input id="sabis-reload" type="checkbox" checked> İşlem bitince sayfayı yenile</label>',
       '  <div class="sabis-status" role="status">Hazır.</div>',
@@ -76,12 +98,16 @@
       return;
     }
 
-    if (action === "select-all") {
-      runFill();
+    if (action === "fill-all") {
+      runFill("all");
+    } else if (action === "fill-selected") {
+      runFill("selected");
+    } else if (action === "fill-random") {
+      runFill("random");
     }
   }
 
-  async function runFill() {
+  async function runFill(mode) {
     var panel = document.getElementById(PANEL_ID);
     var buttons = Array.prototype.slice.call(panel.querySelectorAll("button"));
     setButtonsDisabled(buttons, true);
@@ -93,7 +119,7 @@
         return;
       }
 
-      var plan = buildPlan(rows);
+      var plan = buildPlan(rows, mode);
       var totalRequests = countRequests(plan);
       if (!totalRequests) {
         updateStatus("Gönderilecek yeni seçim bulunamadı.", "warn");
@@ -142,10 +168,23 @@
     }
   }
 
-  function buildPlan(rows) {
+  function buildPlan(rows, mode) {
+    var selectedProgramValues = [];
+    var selectedLearningValues = [];
+    var randomProgramCount = 0;
+    var randomLearningCount = 0;
+
+    if (mode === "selected") {
+      selectedProgramValues = getCheckedPanelValues("program");
+      selectedLearningValues = getCheckedPanelValues("learning");
+    } else if (mode === "random") {
+      randomProgramCount = getNumberInputValue("sabis-random-program-count");
+      randomLearningCount = getNumberInputValue("sabis-random-learning-count");
+    }
+
     return rows.map(function (row) {
-      var programTarget = getAllValues(row.programSelect);
-      var learningTarget = getAllValues(row.learningSelect);
+      var programTarget = getTargetValues(row.programSelect, mode, selectedProgramValues, randomProgramCount);
+      var learningTarget = getTargetValues(row.learningSelect, mode, selectedLearningValues, randomLearningCount);
 
       return {
         row: row.element,
@@ -158,6 +197,20 @@
     }).filter(function (item) {
       return item.olcmeId && (item.programValues.length || item.learningValues.length);
     });
+  }
+
+  function getTargetValues(select, mode, selectedValues, randomCount) {
+    var allValues = getAllValues(select);
+
+    if (mode === "selected") {
+      return selectedValues;
+    }
+
+    if (mode === "random") {
+      return pickRandomValues(allValues, randomCount);
+    }
+
+    return allValues;
   }
 
   function getRows() {
@@ -203,6 +256,94 @@
     return Array.prototype.slice.call(select.options).map(function (option) {
       return option.value;
     });
+  }
+
+  function getSourceOptions(selector) {
+    var select = document.querySelector(selector);
+    if (!select) {
+      return [];
+    }
+
+    return Array.prototype.slice.call(select.options).map(function (option) {
+      return {
+        value: option.value,
+        label: normalizeWhitespace(option.textContent)
+      };
+    });
+  }
+
+  function renderOptionCheckboxes(kind, options) {
+    if (!options.length) {
+      return '<div class="sabis-empty">Seçenek bulunamadı.</div>';
+    }
+
+    return options.map(function (option, index) {
+      var id = "sabis-" + kind + "-option-" + index;
+      return [
+        '<label class="sabis-option" title="' + escapeHtml(option.label) + '">',
+        '  <input type="checkbox" id="' + id + '" data-kind="' + kind + '" value="' + escapeHtml(option.value) + '" checked>',
+        '  <span>' + escapeHtml(option.label) + '</span>',
+        '</label>'
+      ].join("");
+    }).join("");
+  }
+
+  function getCheckedPanelValues(kind) {
+    return Array.prototype.slice.call(document.querySelectorAll('#' + PANEL_ID + ' input[type="checkbox"][data-kind="' + kind + '"]:checked'))
+      .map(function (input) {
+        return input.value;
+      });
+  }
+
+  function getNumberInputValue(id) {
+    var input = document.getElementById(id);
+    var value = input ? Number(input.value) : 0;
+    var max = input ? Number(input.max) : 0;
+
+    if (!Number.isFinite(value) || value < 0) {
+      return 0;
+    }
+
+    if (Number.isFinite(max) && max >= 0) {
+      return Math.min(Math.floor(value), max);
+    }
+
+    return Math.floor(value);
+  }
+
+  function getDefaultRandomCount(optionCount) {
+    return optionCount > 0 ? 1 : 0;
+  }
+
+  function pickRandomValues(values, count) {
+    if (!values.length || count <= 0) {
+      return [];
+    }
+
+    var pool = values.slice();
+    var limit = Math.min(count, pool.length);
+    var picked = [];
+
+    for (var i = 0; i < limit; i += 1) {
+      var index = Math.floor(Math.random() * pool.length);
+      picked.push(pool[index]);
+      pool.splice(index, 1);
+    }
+
+    return picked;
+  }
+
+  function normalizeWhitespace(value) {
+    return String(value || "").replace(/\s+/g, " ").trim();
+  }
+
+  function escapeHtml(value) {
+    return String(value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
   }
 
   function getPostableValues(select, desiredValues) {

@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="360" viewBox="0 0 980 360" role="img" aria-labelledby="title desc">
+  <title id="title">SABIS Çıktı Doldurucu kurulum özeti</title>
+  <desc id="desc">GitHub'dan ZIP indir, ZIP'i aç, Chrome eklentiler sayfasında Developer mode'u aç, Load unpacked ile klasörü seç.</desc>
+  <rect width="980" height="360" rx="18" fill="#f6f8fb"/>
+  <text x="40" y="54" fill="#172033" font-family="Arial, sans-serif" font-size="28" font-weight="700">Kurulum özeti</text>
+  <text x="40" y="84" fill="#4d5c73" font-family="Arial, sans-serif" font-size="16">Chrome Web Store yoksa böyle yüklenir.</text>
+
+  <g transform="translate(40 125)">
+    <rect width="200" height="150" rx="12" fill="#ffffff" stroke="#cfd7e6"/>
+    <circle cx="34" cy="34" r="18" fill="#2468d8"/>
+    <text x="29" y="41" fill="#fff" font-family="Arial, sans-serif" font-size="20" font-weight="700">1</text>
+    <text x="24" y="78" fill="#172033" font-family="Arial, sans-serif" font-size="19" font-weight="700">GitHub</text>
+    <text x="24" y="106" fill="#4d5c73" font-family="Arial, sans-serif" font-size="15">Code butonuna bas</text>
+    <text x="24" y="130" fill="#4d5c73" font-family="Arial, sans-serif" font-size="15">Download ZIP indir</text>
+  </g>
+
+  <path d="M255 200 H305" stroke="#8ea0ba" stroke-width="3" stroke-linecap="round"/>
+  <path d="M296 190 L310 200 L296 210" fill="none" stroke="#8ea0ba" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <g transform="translate(320 125)">
+    <rect width="200" height="150" rx="12" fill="#ffffff" stroke="#cfd7e6"/>
+    <circle cx="34" cy="34" r="18" fill="#2468d8"/>
+    <text x="29" y="41" fill="#fff" font-family="Arial, sans-serif" font-size="20" font-weight="700">2</text>
+    <text x="24" y="78" fill="#172033" font-family="Arial, sans-serif" font-size="19" font-weight="700">ZIP'i aç</text>
+    <text x="24" y="106" fill="#4d5c73" font-family="Arial, sans-serif" font-size="15">Klasörü çıkar</text>
+    <text x="24" y="130" fill="#4d5c73" font-family="Arial, sans-serif" font-size="15">manifest.json gör</text>
+  </g>
+
+  <path d="M535 200 H585" stroke="#8ea0ba" stroke-width="3" stroke-linecap="round"/>
+  <path d="M576 190 L590 200 L576 210" fill="none" stroke="#8ea0ba" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <g transform="translate(600 125)">
+    <rect width="200" height="150" rx="12" fill="#ffffff" stroke="#cfd7e6"/>
+    <circle cx="34" cy="34" r="18" fill="#2468d8"/>
+    <text x="29" y="41" fill="#fff" font-family="Arial, sans-serif" font-size="20" font-weight="700">3</text>
+    <text x="24" y="78" fill="#172033" font-family="Arial, sans-serif" font-size="19" font-weight="700">Chrome</text>
+    <text x="24" y="106" fill="#4d5c73" font-family="Arial, sans-serif" font-size="15">chrome://extensions</text>
+    <text x="24" y="130" fill="#4d5c73" font-family="Arial, sans-serif" font-size="15">Developer mode aç</text>
+  </g>
+
+  <path d="M815 200 H865" stroke="#8ea0ba" stroke-width="3" stroke-linecap="round"/>
+  <path d="M856 190 L870 200 L856 210" fill="none" stroke="#8ea0ba" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <g transform="translate(780 285)">
+    <rect width="160" height="42" rx="21" fill="#176b3a"/>
+    <text x="28" y="27" fill="#fff" font-family="Arial, sans-serif" font-size="15" font-weight="700">Load unpacked</text>
+  </g>
+  <text x="822" y="165" fill="#172033" font-family="Arial, sans-serif" font-size="18" font-weight="700">4. klasörü seç</text>
+  <text x="822" y="193" fill="#4d5c73" font-family="Arial, sans-serif" font-size="15">manifest.json olan</text>
+  <text x="822" y="216" fill="#4d5c73" font-family="Arial, sans-serif" font-size="15">klasörü göster</text>
+</svg>
