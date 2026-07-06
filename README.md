@@ -31,7 +31,7 @@ Bu eklenti şu an Chrome Web Store'da yayınlanmadı. Chrome Web Store geliştir
 1. Bu projeyi bilgisayarınıza indirin.
 2. Chrome'da `chrome://extensions` sayfasını açın.
 3. Sağ üstten `Developer mode` seçeneğini açın.
-4. `Load unpacked` butonuna basın.
+4. `Paketlenmemiş öğe yükle` butonuna basın.
 5. `sabis-outcome-filler` klasörünü seçin.
 
 Kurulumdan sonra SABIS sınav sayfasını yenileyin. Panel otomatik olarak görünecektir.
